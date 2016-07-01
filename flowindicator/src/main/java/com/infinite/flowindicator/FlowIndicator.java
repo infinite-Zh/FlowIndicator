@@ -69,7 +69,6 @@ public class FlowIndicator extends View {
             //宽度，元素数量*(圆直径+直线长度)-一条直线的长度
             width=mFlowSize*(2*RADIUS+FLOW_SPACING)-FLOW_SPACING;
         }
-
         if (heightMode==MeasureSpec.AT_MOST){
             height=MIN_HEIGHT;
         }else if (heightMode==MeasureSpec.EXACTLY){
