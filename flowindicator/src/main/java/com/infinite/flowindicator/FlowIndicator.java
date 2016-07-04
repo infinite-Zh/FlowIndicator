@@ -2,6 +2,8 @@ package com.infinite.flowindicator;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,6 +34,9 @@ public class FlowIndicator extends View {
     private int mFlowSize;
     private int mHeight;
     private int mWidth;
+    private int mCurrentStep;
+
+    private Bitmap mCompleteBmp,mInProcessingBmp,mTodoBmp;
 
 
     public FlowIndicator(Context context, AttributeSet attrs) {
@@ -48,6 +53,9 @@ public class FlowIndicator extends View {
     }
 
     private void init(){
+        mCompleteBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_complete);
+        mInProcessingBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_processing);
+        mTodoBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_todo);
         mLinePaint=new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setColor(mLineColor);
         mLinePaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
@@ -55,6 +63,12 @@ public class FlowIndicator extends View {
 
     public void setFlow(String[] flow){
         mFlowSize= flow.length;
+        invalidate();
+    }
+
+    public void setFlow(String[] flow,int inProcessing){
+        mFlowSize= flow.length;
+        mCurrentStep=inProcessing;
         invalidate();
     }
 
@@ -67,7 +81,7 @@ public class FlowIndicator extends View {
         int height=MeasureSpec.getSize(heightMeasureSpec);
         if (widthMode==MeasureSpec.AT_MOST){
             //宽度，元素数量*(圆直径+直线长度)-一条直线的长度
-            width=mFlowSize*(2*RADIUS+FLOW_SPACING)-FLOW_SPACING;
+            width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
         }
         if (heightMode==MeasureSpec.AT_MOST){
             height=MIN_HEIGHT;
@@ -86,17 +100,29 @@ public class FlowIndicator extends View {
         super.onDraw(canvas);
         //初始水平方向的偏移量
         int xShift=RADIUS+getPaddingLeft();
-
+        xShift=getPaddingLeft();
         for(int i=0;i<mFlowSize;i++){
-            canvas.drawCircle(xShift,getHeight()/2,RADIUS,mLinePaint);
+
+            if (i<mCurrentStep){
+                canvas.drawBitmap(mCompleteBmp,xShift,getPaddingTop(),null);
+                xShift+=mCompleteBmp.getWidth();
+            }else if(i==mCurrentStep){
+//                canvas.drawCircle(xShift,getHeight()/2,RADIUS,mLinePaint);
+                canvas.drawBitmap(mInProcessingBmp,xShift,getPaddingTop(),null);
+                xShift+=mInProcessingBmp.getWidth();
+            }else {
+                canvas.drawBitmap(mTodoBmp,xShift,getPaddingTop(),null);
+                xShift+=mTodoBmp.getWidth();
+            }
+
             //画圆后，偏移量增加一个半径的长度，准备画直线
-            xShift+=RADIUS;
+
             //如果是最后一个圆则跳出循环，不再画直线
             if (i==mFlowSize-1)
                 return;
             canvas.drawLine(xShift,getHeight()/2,xShift+FLOW_SPACING,getHeight()/2,mLinePaint);
             // 画直线后，偏移量增加直线的长度+一个半径，准备画下一个圆
-            xShift+=FLOW_SPACING+RADIUS;
+            xShift+=FLOW_SPACING;
         }
 
 

@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mIndicator= (FlowIndicator) findViewById(R.id.flowIndicator);
-        mIndicator.setFlow(new String[]{"step1","step2","step3","step4","step5"});
+        mIndicator.setFlow(new String[]{"step1","step2","step3","step4","step5"},3);
     }
 }
