@@ -32,8 +32,6 @@ public class FlowIndicator extends View {
     private int mLineColor;
     private Paint mLinePaint;
     private int mFlowSize;
-    private int mHeight;
-    private int mWidth;
     private int mCurrentStep;
 
     private Bitmap mCompleteBmp,mInProcessingBmp,mTodoBmp;
@@ -88,11 +86,6 @@ public class FlowIndicator extends View {
             //宽度，元素数量*(圆直径+直线长度)-一条直线的长度
             width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
         }
-//        else if (widthMode==MeasureSpec.UNSPECIFIED){
-//            width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
-//        }else {
-//            width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
-//        }
         if (heightMode==MeasureSpec.AT_MOST){
             height=MIN_HEIGHT;
         }else if (heightMode==MeasureSpec.EXACTLY){
@@ -129,7 +122,7 @@ public class FlowIndicator extends View {
             //如果是最后一个圆则跳出循环，不再画直线
             if (i==mFlowSize-1)
                 return;
-            canvas.drawLine(xShift,(getHeight()-DEFAULT_LINE_WIDTH)/2,xShift+FLOW_SPACING,(getHeight()-DEFAULT_LINE_WIDTH)/2,mLinePaint);
+            canvas.drawLine(xShift,(getHeight())/2,xShift+FLOW_SPACING,(getHeight())/2,mLinePaint);
             // 画直线后，偏移量增加直线的长度+一个半径，准备画下一个圆
             xShift+=FLOW_SPACING;
         }
