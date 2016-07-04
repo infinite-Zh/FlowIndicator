@@ -2,5 +2,8 @@
 <resources>
     <declare-styleable name="FlowIndicator">
         <attr name="lineColor" format="color|reference"/>
+        <attr name="complete_icon" format="reference"/>
+        <attr name="in_process_icon" format="reference"/>
+        <attr name="todo_icon" format="reference"/>
     </declare-styleable>
 </resources>

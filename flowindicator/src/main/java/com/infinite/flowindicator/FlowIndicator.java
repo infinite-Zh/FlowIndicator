@@ -38,11 +38,16 @@ public class FlowIndicator extends View {
 
     private Bitmap mCompleteBmp,mInProcessingBmp,mTodoBmp;
 
+    private int mCompleteRes,mInProcessingRes,mTodoRes;
+
 
     public FlowIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FlowIndicator);
         mLineColor = array.getColor(R.styleable.FlowIndicator_lineColor, DEFAULT_LINE_COLOR);
+        mCompleteRes=array.getResourceId(R.styleable.FlowIndicator_complete_icon,0);
+        mInProcessingRes=array.getResourceId(R.styleable.FlowIndicator_in_process_icon,0);
+        mTodoRes=array.getResourceId(R.styleable.FlowIndicator_todo_icon,0);
         array.recycle();
         init();
     }
@@ -53,9 +58,9 @@ public class FlowIndicator extends View {
     }
 
     private void init(){
-        mCompleteBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_complete);
-        mInProcessingBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_processing);
-        mTodoBmp= BitmapFactory.decodeResource(getResources(),R.mipmap.ic_todo);
+        mCompleteBmp= BitmapFactory.decodeResource(getResources(),mCompleteRes);
+        mInProcessingBmp= BitmapFactory.decodeResource(getResources(),mInProcessingRes);
+        mTodoBmp= BitmapFactory.decodeResource(getResources(),mTodoRes);
         mLinePaint=new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setColor(mLineColor);
         mLinePaint.setStrokeWidth(DEFAULT_LINE_WIDTH);
@@ -83,6 +88,11 @@ public class FlowIndicator extends View {
             //宽度，元素数量*(圆直径+直线长度)-一条直线的长度
             width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
         }
+//        else if (widthMode==MeasureSpec.UNSPECIFIED){
+//            width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
+//        }else {
+//            width=mFlowSize*(mCompleteBmp.getWidth()+FLOW_SPACING)-FLOW_SPACING;
+//        }
         if (heightMode==MeasureSpec.AT_MOST){
             height=MIN_HEIGHT;
         }else if (heightMode==MeasureSpec.EXACTLY){
@@ -99,19 +109,18 @@ public class FlowIndicator extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //初始水平方向的偏移量
-        int xShift=RADIUS+getPaddingLeft();
+        int xShift;
         xShift=getPaddingLeft();
         for(int i=0;i<mFlowSize;i++){
 
             if (i<mCurrentStep){
-                canvas.drawBitmap(mCompleteBmp,xShift,getPaddingTop(),null);
+                canvas.drawBitmap(mCompleteBmp,xShift,(getHeight()-mCompleteBmp.getHeight())/2,null);
                 xShift+=mCompleteBmp.getWidth();
             }else if(i==mCurrentStep){
-//                canvas.drawCircle(xShift,getHeight()/2,RADIUS,mLinePaint);
-                canvas.drawBitmap(mInProcessingBmp,xShift,getPaddingTop(),null);
+                canvas.drawBitmap(mInProcessingBmp,xShift,(getHeight()-mCompleteBmp.getHeight())/2,null);
                 xShift+=mInProcessingBmp.getWidth();
             }else {
-                canvas.drawBitmap(mTodoBmp,xShift,getPaddingTop(),null);
+                canvas.drawBitmap(mTodoBmp,xShift,(getHeight()-mCompleteBmp.getHeight())/2,null);
                 xShift+=mTodoBmp.getWidth();
             }
 
@@ -120,7 +129,7 @@ public class FlowIndicator extends View {
             //如果是最后一个圆则跳出循环，不再画直线
             if (i==mFlowSize-1)
                 return;
-            canvas.drawLine(xShift,getHeight()/2,xShift+FLOW_SPACING,getHeight()/2,mLinePaint);
+            canvas.drawLine(xShift,(getHeight()-DEFAULT_LINE_WIDTH)/2,xShift+FLOW_SPACING,(getHeight()-DEFAULT_LINE_WIDTH)/2,mLinePaint);
             // 画直线后，偏移量增加直线的长度+一个半径，准备画下一个圆
             xShift+=FLOW_SPACING;
         }

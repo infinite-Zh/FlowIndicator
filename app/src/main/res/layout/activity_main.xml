@@ -8,11 +8,14 @@
     tools:context="com.infinite.flowindicatorsample.MainActivity">
 
 
+
     <com.infinite.flowindicator.FlowIndicator
         android:id="@+id/flowIndicator"
         android:layout_width="wrap_content"
         app:lineColor="#00bb9c"
-        android:padding="10dp"
-        android:layout_height="30dp"/>
+        android:layout_height="80dp"
+        app:complete_icon="@mipmap/ic_complete"
+        app:in_process_icon="@mipmap/ic_processing"
+        app:todo_icon="@mipmap/ic_todo"/>
 
 </RelativeLayout>
