@@ -108,6 +108,7 @@ public class FlowIndicator extends View {
 
             if (i<mCurrentStep){
                 canvas.drawBitmap(mCompleteBmp,xShift,(getHeight()-mCompleteBmp.getHeight())/2,null);
+                //画圆后，偏移量增加一个半径的长度，准备画直线
                 xShift+=mCompleteBmp.getWidth();
             }else if(i==mCurrentStep){
                 canvas.drawBitmap(mInProcessingBmp,xShift,(getHeight()-mCompleteBmp.getHeight())/2,null);
@@ -117,12 +118,11 @@ public class FlowIndicator extends View {
                 xShift+=mTodoBmp.getWidth();
             }
 
-            //画圆后，偏移量增加一个半径的长度，准备画直线
 
             //如果是最后一个圆则跳出循环，不再画直线
             if (i==mFlowSize-1)
                 return;
-            canvas.drawLine(xShift,(getHeight())/2,xShift+FLOW_SPACING,(getHeight())/2,mLinePaint);
+            canvas.drawLine(xShift,getHeight()/2,xShift+FLOW_SPACING,getHeight()/2,mLinePaint);
             // 画直线后，偏移量增加直线的长度+一个半径，准备画下一个圆
             xShift+=FLOW_SPACING;
         }
